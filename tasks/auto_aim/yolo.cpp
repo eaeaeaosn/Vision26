@@ -4,8 +4,10 @@
 
 #include "yolos/yolo11.hpp"
 #include "yolos/yolov5.hpp"
-#include "yolos/yolov5_trt.hpp"
 #include "yolos/yolov8.hpp"
+#ifdef USE_TENSORRT
+#include "yolos/yolov5_trt.hpp"
+#endif
 
 namespace auto_aim
 {
@@ -27,7 +29,11 @@ YOLO::YOLO(const std::string & config_path, bool debug)
   }
 
   else if (yolo_name == "yolov5_trt") {
+#ifdef USE_TENSORRT
     yolo_ = std::make_unique<YOLOV5_TRT>(config_path, debug);
+#else
+    throw std::runtime_error("yolov5_trt requires building with -DUSE_TENSORRT=ON");
+#endif
   }
 
   else {

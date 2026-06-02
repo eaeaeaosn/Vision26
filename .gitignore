@@ -9,6 +9,7 @@ records_auto_buff_big/
 records_new/
 imgs/
 MvSdkLog/
+*.engine
 testvideos/
 watchdog.sh
 records_24/

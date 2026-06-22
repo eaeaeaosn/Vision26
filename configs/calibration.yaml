@@ -1,16 +1,20 @@
-pattern_cols: 10
-pattern_rows: 7
-center_distance_mm: 40
+# 棋盘格内角点数 = 方格数 - 1。实物为 8x11 方格，故内角点为 7x10。
+pattern_cols: 7
+pattern_rows: 10
+center_distance_mm: 15  # 棋盘格方格边长(mm)
 
-R_gimbal2imubody: [1, 0, 0, 0, 1, 0,  0, 0, 1]
+# IMU body axes (from capture display): +Z=up(yaw), +Y=backward(roll), +X=left(pitch).
+# Gimbal frame is X-forward, Y-left, Z-up -> columns are gimbal axes in IMU coords (det=+1).
+R_gimbal2imubody: [0, 1, 0,  -1, 0, 0,  0, 0, 1]
+
+# 重投影误差: 0.3475px
+camera_matrix: [1399.846485776063, 0, 809.43080181076084, 0, 1398.506345838508, 680.38879939866706, 0, 0, 1]
+distort_coeffs: [-0.073551173067611372, 0.11057967302445899, 0.0048680758246866388, 0.0037787435510434823, 0]
 
 camera_name: "hikrobot"
 exposure_ms: 3
 gain: 10.0
 vid_pid: "2bdf:0001"
 
-#####-----cboard参数-----#####
-quaternion_canid: 0x01
-bullet_speed_canid: 0x110
-send_canid: 0xff
-can_interface: "can0"
+#####-----gimbal参数（MicroUSB / 虚拟串口）-----#####
+com_port: "/dev/cboard"

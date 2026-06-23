@@ -3,11 +3,12 @@ pattern_cols: 7
 pattern_rows: 10
 center_distance_mm: 15  # 棋盘格方格边长(mm)
 
-# IMU body axes (from capture display): +Z=up(yaw), +Y=backward(roll), +X=left(pitch).
-# Gimbal frame is X-forward, Y-left, Z-up -> columns are gimbal axes in IMU coords (det=+1).
-R_gimbal2imubody: [0, 1, 0,  -1, 0, 0,  0, 0, 1]
+# C板IMU坐标系 前Y右X上Z
+# 云台世界坐标系 前X左Y上Z
+R_gimbal2imubody: [0, -1, 0,  1, 0, 0,  0, 0, 1]
 
 # 重投影误差: 0.3475px
+# 测试新的相机删除这段并换成新的calibrate
 camera_matrix: [1399.846485776063, 0, 809.43080181076084, 0, 1398.506345838508, 680.38879939866706, 0, 0, 1]
 distort_coeffs: [-0.073551173067611372, 0.11057967302445899, 0.0048680758246866388, 0.0037787435510434823, 0]
 

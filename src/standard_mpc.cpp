@@ -77,13 +77,6 @@ int main(int argc, char * argv[])
         auto gs = gimbal.state();
         auto plan = planner.plan(target, gs.bullet_speed);
 
-        if (plan.control)
-          tools::logger()->info(
-            "cmd yaw={:.3f}rad({:.1f}deg) pitch={:.3f}rad({:.1f}deg) fire={}",
-            plan.yaw,   plan.yaw   * 57.3f,
-            plan.pitch, plan.pitch * 57.3f,
-            plan.fire);
-
         gimbal.send(
           plan.control, plan.fire, plan.yaw, plan.yaw_vel, plan.yaw_acc, plan.pitch, plan.pitch_vel,
           plan.pitch_acc);
@@ -112,15 +105,6 @@ int main(int argc, char * argv[])
     if (mode.load() == io::GimbalMode::AUTO_AIM) {
       auto armors = yolo.detect(img);
       auto targets = tracker.track(armors, t);
-
-      cv::Mat display = img.clone();
-      for (const auto & armor : armors) {
-        for (int i = 0; i < (int)armor.points.size(); i++)
-          cv::line(display, armor.points[i], armor.points[(i + 1) % armor.points.size()], {0, 255, 0}, 2);
-        cv::circle(display, armor.center, 4, {0, 0, 255}, -1);
-      }
-      cv::imshow("camera", display);
-      cv::waitKey(1);
       if (!targets.empty())
         target_queue.push(targets.front());
       else

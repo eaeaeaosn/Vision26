@@ -25,6 +25,7 @@ struct __attribute__((packed)) GimbalToVision
   float pitch_vel;
   float bullet_speed;
   uint16_t bullet_count;  // 子弹累计发送次数
+  uint8_t self_color;     // 本机颜色: 0=未知, 1=蓝, 2=红 (下位机由裁判系统读取)
   uint16_t crc16;
 };
 
@@ -61,6 +62,7 @@ struct GimbalState
   float pitch_vel;
   float bullet_speed;
   uint16_t bullet_count;
+  uint8_t self_color;  // 本机颜色: 0=未知, 1=蓝, 2=红
 };
 
 class Gimbal

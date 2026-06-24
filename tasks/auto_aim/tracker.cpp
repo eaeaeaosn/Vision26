@@ -28,6 +28,8 @@ Tracker::Tracker(const std::string & config_path, Solver & solver)
 
 std::string Tracker::state() const { return state_; }
 
+void Tracker::set_enemy_color(Color color) { enemy_color_ = color; }
+
 std::list<Target> Tracker::track(
   std::list<Armor> & armors, std::chrono::steady_clock::time_point t, bool use_enemy_color)
 {

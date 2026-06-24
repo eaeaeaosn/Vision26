@@ -101,6 +101,12 @@ int main(int argc, char * argv[])
     recorder.record(img, q, t);
     solver.set_R_gimbal2world(q);
 
+    // 下位机回传本机颜色(1=蓝,2=红),取反得到要识别的敌方颜色;为0(未知)时沿用yaml配置
+    if (gs.self_color == 1)
+      tracker.set_enemy_color(auto_aim::Color::red);
+    else if (gs.self_color == 2)
+      tracker.set_enemy_color(auto_aim::Color::blue);
+
     /// 自瞄
     if (mode.load() == io::GimbalMode::AUTO_AIM) {
       auto armors = yolo.detect(img);

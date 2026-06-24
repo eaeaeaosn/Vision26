@@ -21,6 +21,9 @@ public:
 
   std::string state() const;
 
+  // 运行时设置敌方颜色,覆盖yaml中的enemy_color(下位机经串口回传本机颜色后取反得到)
+  void set_enemy_color(Color color);
+
   std::list<Target> track(
     std::list<Armor> & armors, std::chrono::steady_clock::time_point t,
     bool use_enemy_color = true);

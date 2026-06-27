@@ -142,12 +142,25 @@ void Gimbal::read_thread()
       continue;
     }
 
-    if (!read(reinterpret_cast<uint8_t *>(&rx_data_), sizeof(rx_data_.head))) {
+    // 逐字节滑动同步帧头, 步长为1.
+    // 不能"一次读2字节当帧头"+失配丢2字节: 那样步长恒为偶数, 一旦相对真实帧边界
+    // 错位奇数字节, 真帧头'S''P'会永远跨在两次读取之间而无法匹配; 而当payload里恰好
+    // 出现0x53 0x50(偶数偏移)时, CRC失败后跳过的44字节又与真实帧周期同相位, 会把
+    // 假帧头锁死成无限CRC fail. 逐字节滑动可在<=44字节内从任意错位/假帧头中恢复.
+    uint8_t byte;
+    if (!read(&byte, 1)) {
       error_count++;
       continue;
     }
+    if (byte != 'S') continue;
+    if (!read(&byte, 1)) {
+      error_count++;
+      continue;
+    }
+    if (byte != 'P') continue;
 
-    if (rx_data_.head[0] != 'S' || rx_data_.head[1] != 'P') continue;
+    rx_data_.head[0] = 'S';
+    rx_data_.head[1] = 'P';
 
     auto t = std::chrono::steady_clock::now();
 

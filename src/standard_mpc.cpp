@@ -21,6 +21,7 @@
 #include "tools/math_tools.hpp"
 #include "tools/plotter.hpp"
 #include "tools/recorder.hpp"
+#include "tools/yaml.hpp"
 
 const std::string keys =
   "{help h usage ? | | 输出命令行参数说明}"
@@ -39,7 +40,14 @@ int main(int argc, char * argv[])
 
   tools::Exiter exiter;
   tools::Plotter plotter;
-  tools::Recorder recorder;
+
+  // 录包配置(可选键, 缺省时保持原行为: 开启, 30fps, 60s分段)
+  auto record_cfg = tools::load(config_path);
+  bool record_enabled = record_cfg["record"] ? record_cfg["record"].as<bool>() : true;
+  double record_fps = record_cfg["record_fps"] ? record_cfg["record_fps"].as<double>() : 30.0;
+  double record_segment =
+    record_cfg["record_segment_seconds"] ? record_cfg["record_segment_seconds"].as<double>() : 60.0;
+  tools::Recorder recorder(record_fps, record_segment, record_enabled);
 
   io::Gimbal gimbal(config_path);
   io::Camera camera(config_path);
